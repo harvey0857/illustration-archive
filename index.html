@@ -258,14 +258,19 @@
       border-color: var(--yellow);
     }
 
-    /* ===== MASONRY GALLERY ===== */
+    /* ===== GALLERY ===== */
     .gallery {
-      columns: 4;
-      column-gap: 16px;
+      --cols: 4;
+      display: flex;
+      gap: 16px;
+    }
+    .gallery__col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
     .gallery__item {
-      break-inside: avoid;
-      margin-bottom: 16px;
       background: var(--dark-card);
       border: 1px solid var(--dark-border);
       overflow: hidden;
@@ -517,17 +522,17 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1100px) {
-      .gallery { columns: 3; }
+      .gallery { --cols: 3; }
     }
     @media (max-width: 800px) {
-      .gallery { columns: 2; }
+      .gallery { --cols: 2; }
       .hero__content { flex-direction: column; padding-top: 120px; }
       .hero__stats { flex-direction: row; gap: 8px; min-width: unset; width: 100%; }
       .hstat { flex: 1; }
       .nav__links { display: none; }
     }
     @media (max-width: 500px) {
-      .gallery { columns: 1; }
+      .gallery { --cols: 1; }
       .hero__stats { flex-direction: column; }
     }
 
@@ -705,15 +710,13 @@
     document.getElementById('lastUpdated').textContent = fmtDate(posts[0].created_at);
     document.getElementById('postCount').textContent = posts.length;
 
-    // Render cards
-    let html = '';
-    posts.forEach((post, i) => {
+    // Build card HTML
+    function buildCard(post, i) {
       const img = post.images[0];
       const hasRealImg = img && img.url && img.url.length > 0;
       const ratio = img ? `${img.width}/${img.height}` : '16/9';
       const date = fmtDate(post.created_at);
-
-      html += `
+      return `
         <div class="gallery__item corner" data-index="${i}" style="animation-delay:${i * 0.05}s">
           <div class="gallery__img-wrap">
             ${hasRealImg
@@ -738,8 +741,18 @@
             </div>
           </div>
         </div>`;
+    }
+
+    // Distribute cards row-by-row into columns (left to right, top to bottom)
+    const numCols = parseInt(getComputedStyle(gallery).getPropertyValue('--cols')) || 4;
+    const cols = Array.from({ length: numCols }, () => []);
+    posts.forEach((post, i) => {
+      cols[i % numCols].push(buildCard(post, i));
     });
-    gallery.innerHTML = html;
+
+    gallery.innerHTML = cols.map(col =>
+      `<div class="gallery__col">${col.join('')}</div>`
+    ).join('');
 
     // Click events
     gallery.querySelectorAll('.gallery__item').forEach(item => {
