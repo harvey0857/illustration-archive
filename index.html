@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BirKai // PORTFOLIO</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+
+    :root {
+      --yellow: #FFC800;
+      --yellow-dim: #B8920A;
+      --yellow-glow: rgba(255, 200, 0, 0.15);
+      --yellow-soft: rgba(255, 200, 0, 0.06);
+      --dark: #0A0A0A;
+      --dark-surface: #111111;
+      --dark-card: #141414;
+      --dark-border: #222222;
+      --gray: #555555;
+      --light-gray: #999999;
+      --text: #E0E0E0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Rajdhani', 'Noto Sans TC', sans-serif;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--yellow);
+      color: var(--dark);
+    }
+
+    /* ===== SCANLINE ===== */
+    .scanline {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.012) 2px, rgba(0,0,0,0.012) 4px
+      );
+    }
+
+    /* ===== WARNING STRIPE ===== */
+    .stripe {
+      height: 4px;
+      background: repeating-linear-gradient(
+        -45deg, var(--yellow), var(--yellow) 8px,
+        var(--dark) 8px, var(--dark) 16px
+      );
+    }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--dark-border);
+    }
+    .nav .stripe { position: absolute; top: 0; left: 0; right: 0; }
+    .nav__inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav__logo {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 18px; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--yellow);
+    }
+    .nav__logo-mark {
+      width: 34px; height: 34px;
+      background: var(--yellow);
+      color: var(--dark);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900;
+      clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+    }
+    .nav__links {
+      display: flex; gap: 28px; list-style: none;
+    }
+    .nav__links a {
+      color: var(--light-gray); text-decoration: none;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav__links a:hover, .nav__links a.active { color: var(--yellow); }
+    .nav__links a.active { border-bottom: 2px solid var(--yellow); padding-bottom: 2px; }
+    .nav__x-link {
+      color: var(--yellow) !important;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      min-height: 70vh;
+      display: flex; align-items: center;
+      overflow: hidden;
+    }
+    .hero__bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(255,200,0,0.05) 0%, transparent 60%),
+        linear-gradient(180deg, var(--dark) 0%, #0D0D0D 100%);
+    }
+    .hero__grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,200,0,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,200,0,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero__content {
+      position: relative;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 140px 40px 80px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 60px;
+    }
+    .hero__text { max-width: 600px; }
+    .hero__label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 4px; text-transform: uppercase;
+      color: var(--yellow); margin-bottom: 20px;
+    }
+    .hero__label::before {
+      content: ''; display: block;
+      width: 36px; height: 1px; background: var(--yellow);
+    }
+    .hero__title {
+      font-size: clamp(42px, 6vw, 72px);
+      font-weight: 700; line-height: 1.05;
+      color: #fff; margin-bottom: 16px;
+    }
+    .hero__title .accent {
+      color: var(--yellow);
+      display: block;
+      font-size: 0.55em;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .hero__desc {
+      font-size: 15px; line-height: 1.8;
+      color: var(--light-gray); margin-bottom: 32px;
+      max-width: 480px;
+    }
+    .hero__tags {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      border: 1px solid var(--yellow-dim);
+      color: var(--yellow);
+    }
+    .tag--filled {
+      background: var(--yellow); color: var(--dark);
+      border-color: var(--yellow);
+    }
+
+    /* Hero Stats */
+    .hero__stats {
+      display: flex; flex-direction: column; gap: 4px;
+      min-width: 260px;
+    }
+    .hstat {
+      background: rgba(20,20,20,0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--dark-border);
+      padding: 18px 22px;
+      position: relative;
+    }
+    .hstat::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; width: 3px; height: 100%;
+      background: var(--yellow);
+    }
+    .hstat__label {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 2px;
+    }
+    .hstat__value {
+      font-size: 26px; font-weight: 700; color: var(--yellow);
+    }
+
+    /* ===== SECTION ===== */
+    .section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+    .section__header {
+      display: flex; align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .section__label {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 4px; text-transform: uppercase;
+      color: var(--yellow-dim); margin-bottom: 6px;
+    }
+    .section__title {
+      font-size: 32px; font-weight: 700;
+      color: #fff; letter-spacing: 1px;
+    }
+    .section__line {
+      flex: 1; height: 1px;
+      background: var(--dark-border);
+      margin-left: 40px; margin-bottom: 10px;
+    }
+
+    /* ===== FILTER BAR ===== */
+    .filters {
+      display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 6px 18px;
+      font-family: inherit;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      background: transparent;
+      color: var(--light-gray);
+      border: 1px solid var(--dark-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover {
+      border-color: var(--yellow-dim);
+      color: var(--yellow);
+    }
+    .filter-btn.active {
+      background: var(--yellow);
+      color: var(--dark);
+      border-color: var(--yellow);
+    }
+
+    /* ===== MASONRY GALLERY ===== */
+    .gallery {
+      columns: 4;
+      column-gap: 16px;
+    }
+    .gallery__item {
+      break-inside: avoid;
+      margin-bottom: 16px;
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .gallery__item:hover {
+      border-color: var(--yellow-dim);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 20px rgba(255,200,0,0.04);
+    }
+    .gallery__img-wrap {
+      position: relative;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+    .gallery__img {
+      width: 100%;
+      display: block;
+      transition: transform 0.4s;
+    }
+    .gallery__item:hover .gallery__img {
+      transform: scale(1.03);
+    }
+    /* placeholder for demo */
+    .gallery__placeholder {
+      width: 100%;
+      aspect-ratio: var(--ratio, 16/9);
+      background: linear-gradient(135deg, #1a1a1a 0%, #222 50%, #1a1a1a 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px; font-weight: 900;
+      color: rgba(255,200,0,0.06);
+    }
+    .gallery__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent 50%, rgba(10,10,10,0.95) 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 16px;
+    }
+    .gallery__item:hover .gallery__overlay {
+      opacity: 1;
+    }
+    .gallery__text {
+      font-size: 13px;
+      color: #fff;
+      line-height: 1.5;
+      margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .gallery__meta {
+      display: flex; gap: 16px;
+      font-size: 11px; color: var(--light-gray);
+      letter-spacing: 1px;
+    }
+    .gallery__meta span {
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .gallery__date-badge {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--yellow);
+      border: 1px solid rgba(255,200,0,0.2);
+    }
+    .gallery__link-badge {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 28px; height: 28px;
+      background: rgba(10,10,10,0.8);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,200,0,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--yellow);
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .gallery__item:hover .gallery__link-badge { opacity: 1; }
+
+    /* ===== LIGHTBOX ===== */
+    .lightbox {
+      position: fixed; inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(20px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      cursor: zoom-out;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox__img {
+      max-width: 90vw;
+      max-height: 80vh;
+      object-fit: contain;
+      border: 1px solid var(--dark-border);
+    }
+    .lightbox__placeholder {
+      width: 60vw; height: 60vh;
+      background: #1a1a1a;
+      border: 1px solid var(--dark-border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray); font-size: 14px; letter-spacing: 2px;
+    }
+    .lightbox__info {
+      margin-top: 20px;
+      max-width: 600px;
+      text-align: center;
+    }
+    .lightbox__text {
+      font-size: 14px; color: var(--text);
+      line-height: 1.7; margin-bottom: 12px;
+    }
+    .lightbox__meta {
+      display: flex; gap: 20px; justify-content: center;
+      font-size: 12px; color: var(--light-gray);
+    }
+    .lightbox__meta span {
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .lightbox__close {
+      position: absolute;
+      top: 24px; right: 32px;
+      width: 40px; height: 40px;
+      background: transparent;
+      border: 1px solid var(--dark-border);
+      color: var(--yellow);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .lightbox__close:hover {
+      background: var(--yellow);
+      color: var(--dark);
+    }
+    .lightbox__link {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 16px;
+      padding: 8px 20px;
+      font-family: inherit;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--yellow);
+      border: 1px solid var(--yellow-dim);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .lightbox__link:hover {
+      background: var(--yellow-glow);
+      border-color: var(--yellow);
+    }
+
+    /* ===== LOADING STATE ===== */
+    .loading {
+      text-align: center;
+      padding: 80px 0;
+      color: var(--gray);
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .loading__spinner {
+      width: 40px; height: 40px;
+      border: 2px solid var(--dark-border);
+      border-top-color: var(--yellow);
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== STATUS BAR ===== */
+    .status-bar {
+      background: var(--dark-surface);
+      border: 1px solid var(--dark-border);
+      padding: 14px 24px;
+      margin-bottom: 32px;
+      display: flex; align-items: center; gap: 20px;
+      font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--gray);
+    }
+    .status-bar__dot {
+      width: 6px; height: 6px;
+      background: #4CAF50;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .status-bar__count {
+      color: var(--yellow);
+      font-weight: 700;
+    }
+    .status-bar__sep {
+      width: 1px; height: 16px;
+      background: var(--dark-border);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      border-top: 1px solid var(--dark-border);
+      padding: 40px;
+    }
+    .footer__inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex; justify-content: space-between;
+      align-items: center;
+    }
+    .footer__copy {
+      font-size: 11px; color: var(--gray); letter-spacing: 2px;
+    }
+    .footer__links {
+      display: flex; gap: 20px;
+    }
+    .footer__links a {
+      font-size: 11px; color: var(--gray);
+      text-decoration: none; letter-spacing: 1px;
+      transition: color 0.2s;
+    }
+    .footer__links a:hover { color: var(--yellow); }
+
+    /* ===== CORNER DECO ===== */
+    .corner::before, .corner::after {
+      content: ''; position: absolute;
+      width: 14px; height: 14px;
+      border-color: var(--yellow-dim);
+      border-style: solid;
+    }
+    .corner::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+    .corner::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1100px) {
+      .gallery { columns: 3; }
+    }
+    @media (max-width: 800px) {
+      .gallery { columns: 2; }
+      .hero__content { flex-direction: column; padding-top: 120px; }
+      .hero__stats { flex-direction: row; gap: 8px; min-width: unset; width: 100%; }
+      .hstat { flex: 1; }
+      .nav__links { display: none; }
+    }
+    @media (max-width: 500px) {
+      .gallery { columns: 1; }
+      .hero__stats { flex-direction: column; }
+    }
+
+    /* ===== ANIMATION ===== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .anim { opacity: 0; animation: fadeUp 0.5s ease forwards; }
+    .anim-d1 { animation-delay: 0.1s; }
+    .anim-d2 { animation-delay: 0.2s; }
+    .anim-d3 { animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="stripe"></div>
+  <div class="nav__inner">
+    <div class="nav__logo">
+      <div class="nav__logo-mark">BK</div>
+      BIRKAI
+    </div>
+    <ul class="nav__links">
+      <li><a href="#" class="active">Gallery</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="https://x.com/BirKai9453" target="_blank" class="nav__x-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        @BirKai9453
+      </a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__grid"></div>
+  <div class="hero__content">
+    <div class="hero__text">
+      <div class="hero__label anim">Illustrator // Digital Artist</div>
+      <h1 class="hero__title anim anim-d1">
+        BirKai
+        <span class="accent">Portfolio Archive</span>
+      </h1>
+      <p class="hero__desc anim anim-d2">
+        作品集自動同步自 X (@BirKai9453)。所有含圖貼文即時更新至此頁面。
+      </p>
+      <div class="hero__tags anim anim-d3">
+        <span class="tag tag--filled">Illustration</span>
+        <span class="tag">Character Design</span>
+        <span class="tag">Digital Art</span>
+        <span class="tag">Fan Art</span>
+      </div>
+    </div>
+    <div class="hero__stats anim anim-d2">
+      <div class="hstat">
+        <div class="hstat__label">Total Works</div>
+        <div class="hstat__value" id="totalWorks">--</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat__label">Total Likes</div>
+        <div class="hstat__value" id="totalLikes">--</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat__label">Last Updated</div>
+        <div class="hstat__value" id="lastUpdated" style="font-size:16px;">--</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stripe"></div>
+
+<!-- GALLERY -->
+<section class="section" id="gallery">
+  <div class="section__header">
+    <div>
+      <div class="section__label">Auto-synced from X</div>
+      <h2 class="section__title">Works <span style="color:var(--yellow)">Gallery</span></h2>
+    </div>
+    <div class="section__line"></div>
+  </div>
+
+  <!-- Status bar -->
+  <div class="status-bar" id="statusBar">
+    <div class="status-bar__dot"></div>
+    <span>Feed Status: <strong style="color:#4CAF50;">ONLINE</strong></span>
+    <div class="status-bar__sep"></div>
+    <span>Posts Loaded: <span class="status-bar__count" id="postCount">0</span></span>
+    <div class="status-bar__sep"></div>
+    <span>Source: x.com/<span class="status-bar__count">BirKai9453</span></span>
+  </div>
+
+  <!-- Gallery Container -->
+  <div class="gallery" id="galleryGrid">
+    <div class="loading" id="loadingState">
+      <div class="loading__spinner"></div>
+      Fetching posts...
+    </div>
+  </div>
+</section>
+
+<div class="stripe"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__copy">
+      <span style="color:var(--yellow);">BIRKAI</span> // PORTFOLIO ARCHIVE
+    </div>
+    <div class="footer__links">
+      <a href="https://x.com/BirKai9453" target="_blank">X / Twitter</a>
+      <a href="#">Commission Info</a>
+    </div>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox__close" id="lightboxClose">&times;</button>
+  <div id="lightboxContent"></div>
+  <div class="lightbox__info">
+    <div class="lightbox__text" id="lightboxText"></div>
+    <div class="lightbox__meta" id="lightboxMeta"></div>
+    <a class="lightbox__link" id="lightboxLink" href="#" target="_blank">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      View on X
+    </a>
+  </div>
+</div>
+
+<script>
+(function() {
+  const gallery = document.getElementById('galleryGrid');
+  const loading = document.getElementById('loadingState');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxContent = document.getElementById('lightboxContent');
+  const lightboxText = document.getElementById('lightboxText');
+  const lightboxMeta = document.getElementById('lightboxMeta');
+  const lightboxLink = document.getElementById('lightboxLink');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  // Format number
+  function fmtNum(n) {
+    if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return String(n);
+  }
+
+  // Format date
+  function fmtDate(dateStr) {
+    const d = new Date(dateStr);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}.${m}.${day}`;
+  }
+
+  // Render gallery
+  function render(posts) {
+    loading.style.display = 'none';
+
+    if (!posts || posts.length === 0) {
+      gallery.innerHTML = '<div class="loading">NO POSTS FOUND — RUN fetch-posts.js FIRST</div>';
+      return;
+    }
+
+    // Update stats
+    document.getElementById('totalWorks').textContent = posts.length;
+    const totalLikes = posts.reduce((sum, p) => sum + (p.metrics?.like_count || 0), 0);
+    document.getElementById('totalLikes').textContent = fmtNum(totalLikes);
+    document.getElementById('lastUpdated').textContent = fmtDate(posts[0].created_at);
+    document.getElementById('postCount').textContent = posts.length;
+
+    // Render cards
+    let html = '';
+    posts.forEach((post, i) => {
+      const img = post.images[0];
+      const hasRealImg = img && img.url && img.url.length > 0;
+      const ratio = img ? `${img.width}/${img.height}` : '16/9';
+      const date = fmtDate(post.created_at);
+
+      html += `
+        <div class="gallery__item corner" data-index="${i}" style="animation-delay:${i * 0.05}s">
+          <div class="gallery__img-wrap">
+            ${hasRealImg
+              ? `<img class="gallery__img" src="${img.url}" alt="" loading="lazy">`
+              : `<div class="gallery__placeholder" style="--ratio:${ratio};">${String(i + 1).padStart(3, '0')}</div>`
+            }
+            <div class="gallery__date-badge">${date}</div>
+            <div class="gallery__link-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </div>
+            <div class="gallery__overlay">
+              <div class="gallery__text">${post.text}</div>
+              <div class="gallery__meta">
+                <span>&#9825; ${fmtNum(post.metrics?.like_count || 0)}</span>
+                <span>&#8635; ${fmtNum(post.metrics?.retweet_count || 0)}</span>
+                <span>&#9741; ${fmtNum(post.metrics?.reply_count || 0)}</span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    });
+    gallery.innerHTML = html;
+
+    // Click events
+    gallery.querySelectorAll('.gallery__item').forEach(item => {
+      item.addEventListener('click', () => openLightbox(posts[item.dataset.index]));
+    });
+  }
+
+  // Lightbox
+  function openLightbox(post) {
+    const img = post.images[0];
+    const hasRealImg = img && img.url && img.url.length > 0;
+
+    lightboxContent.innerHTML = hasRealImg
+      ? `<img class="lightbox__img" src="${img.url}" alt="">`
+      : `<div class="lightbox__placeholder">IMAGE PREVIEW — RUN fetch-posts.js TO LOAD REAL IMAGES</div>`;
+
+    lightboxText.textContent = post.text;
+    lightboxMeta.innerHTML = `
+      <span>&#9825; ${fmtNum(post.metrics?.like_count || 0)} Likes</span>
+      <span>&#8635; ${fmtNum(post.metrics?.retweet_count || 0)} RTs</span>
+      <span>${fmtDate(post.created_at)}</span>
+    `;
+    lightboxLink.href = post.tweet_url;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // Load posts.json
+  fetch('posts.json')
+    .then(res => res.json())
+    .then(render)
+    .catch(err => {
+      console.error('Failed to load posts.json:', err);
+      loading.innerHTML = 'LOAD FAILED — ENSURE posts.json EXISTS';
+    });
+})();
+</script>
+
+</body>
+</html>
